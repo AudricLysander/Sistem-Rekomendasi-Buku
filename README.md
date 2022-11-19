@@ -146,7 +146,7 @@ Pada tahap ini, akan digunakan Content Based Filtering dan  Collaborative Filter
 
 1. Content Based Filtering
 
-Merupakan teknik rekomendasi berdasarkan barang yang populer. Teknik ini dilakukan dengan menggunakan fungsi TfidfVectorizer() untuk mengambil fitur penting seperti title serta tags, lalu fitur tersebut akan ditransformasikan dalam matriks. Selanjutnya akan dicari derajat kesamaan menggunakan fungsi cosine_similarity(),  sehingga nanti dapat direkomendasikan kepada user.
+Merupakan teknik rekomendasi berdasarkan barang yang populer. Teknik ini dilakukan dengan menggunakan fungsi TfidfVectorizer() untuk mengambil fitur penting seperti title serta tags, lalu fitur tersebut akan ditransformasikan dalam matriks. Pada tahap ini, kita akan menginisialisasi TfidfVectorizer terlebih dahulu, dilanjutkan dengan melakukan perhitungan idf pada data tag_name dan menjadikannya kedalam array, sehingga setiap nilai unik pada tag_name akan menjadi 1 array dan ditransformasikan ke dalam bentuk matriks. Untuk menghasilkan vektor tf-idf dalam bentuk matriks bisa menggunakan fungsi todense(). Matriks tersebut akan menunjukan korelasi antara tag_name dengan title. Selanjutnya akan dicari derajat kesamaan menggunakan fungsi cosine_similarity(),  sehingga nanti dapat direkomendasikan kepada user. Pada tahap ini, akan dihitung cosine similarity dataframe yang diperoleh pada tahapan sebelumnya. Selanjutnya matriks kesamaan setiap title dengan menampilkan title buku dalam 5 sampel kolom dan 10 sampel baris. Dengan cosine, kita bisa mengidentifikasi kesamaan anatara satu buku dengan buku lainnya.
 
 Kelebihan dari teknik ini adalah dapat merekomendasikan barang yang belum pernah di ulas, tetapi teknik ini hanya akan memberikan rekomendasi untuk barang yang memiliki kemiripan saja.
 
@@ -186,7 +186,9 @@ Dari kedua contoh tersebut, dapat dilihat bahwa sistem akan merekomendasikan buk
 
 2. Collaborative Filtering
 
-Merupakan teknik rekomendasi berdasarkan prediksi menggunakan deep learning yang mungkin akan disukai oleh pengguna. Teknik ini memerlukan ulasan dari pengguna lain untuk memberikan rekomendasi. Tahap yang perlu dilakukan sebelum menggunakan teknik ini adalah tahap preparation untuk encoding dataset, melakukan split data train dan test, dan membuat class ReccomenderNet untuk memberikan hasil rekomendasi.
+Merupakan teknik rekomendasi berdasarkan prediksi menggunakan deep learning yang mungkin akan disukai oleh pengguna. Teknik ini memerlukan ulasan dari pengguna lain untuk memberikan rekomendasi. Tahap yang perlu dilakukan sebelum menggunakan teknik ini adalah tahap preparation untuk encoding dataset, melakukan split data train dan test, dan membuat class RecommenderNet untuk memberikan hasil rekomendasi. 
+
+Proses sebelum encoding dilakukan adalah mengubah user_id menjadi list tanpa nilai yang sama, lalu dilakukan encoding angka ke user_id, begitupula dengan fitur book_id. Lalu dilakukan split data train (80%) dan test (20%). Selanjutnya buat rating dalam skala 0 sampai 1 agar mudah untuk dilakukan proses training. Proses berikutnya akan dibuat class RecommenderNet dengan keras Model class. Di dalam RecommenderNet ini akan dihitung skor kecocokan antara pengguna dan buku dengan teknik embedding. Pertama akan dilakukan proses embedding pada user dan buku. Selanjutnya akan dilakukan operasi perkalian dot produk antara embedding user dan buku. Selain itu juga dapat menambahkan bias untuk setiap user dan buku. Skor kecocokan ditetapkan dalam skala [0, 1] dengan fungsi aktivasi sigmoid.
 
 Kelebihan dari teknik ini adalah dapat merekomendasikan barang dalam kondisi sulitnya melakukan analisis, namun pendekatan ini memerlukan data ulasan untuk memberikan rekomendasi.
 
@@ -232,7 +234,7 @@ Evaluasi pada teknik ini menggunakan *Root Mean Squared Error* (RMSE). Nilai RMS
 
 ![](https://github.com/AudricLysander/Sistem-Rekomendasi-Buku/blob/main/asset/evaluasi.jpg?raw=True)
 
-Didapatkan nilai RMSE yang semakin menurun pada tiap epoch-nya, pada epoch terakhir (ke-20), didapatkan error pada nilai train sebesar 0,245 dan test sebesar 0,246.
+Didapatkan nilai RMSE yang semakin menurun pada tiap epoch-nya, pada epoch terakhir (ke-20), didapatkan error pada nilai train sebesar 0,245 dan test sebesar 0,246. Dari grafik plot tersebut, dapat dikatakan sebagai goodfit karena nilai train dan test tidak berbeda jauh, dimana hanya berbeda 0,001 saja, sehingga dapat dikatakan goodfit.
 
 ## Kesimpulan
 Sistem rekomendasi yang menggunakan teknik Content Based Filtering dan Collaborative Filtering sama-sama dapat memberikan pengguna rekomendasi suatu barang. Penggunaan kedua teknik tersebut memiliki kelebihan dan kekurangan masing-masing, sehingga dapat kita pakai sesuai dengan kebutuhan dan data yang tersedia untuk mendapatkan hasil rekomendasi yang maksimal.
